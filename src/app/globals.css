@@ -19,3 +19,37 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.menu-link {
+  @apply flex items-center mt-3 p-2 rounded transition-all ;
+  &:hover {
+    color: black;
+  }
+}
+
+
+
+.menu-link .icon,
+.menu-link .menu-item {
+  color: white;
+  transition: color 0.3s;
+}
+
+.menu-link:hover .icon,
+.menu-link:hover .menu-item {
+  color: black;
+}
+
+.menu-item {
+  @apply ml-3 text-sm font-semibold text-white;
+}
+
+.sidebar {
+  @apply fixed p-5 right-0 top-0 w-full sm:w-[500px] h-screen  z-20 shadow-2xl transition-all duration-300;
+  background : rgb(5, 76, 137);
+}
+
+.topmenu {
+  @apply flex px-5 justify-between items-center w-full text-white;
+  background : rgb(5, 76, 137);
+}
