@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  user
+}
+
+enum validResult {
+  L
+  E
+  V
+}
+
+model User {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  emailVerified DateTime?
+  password      String
+  role          Role           @default(user)
+  image         String?
+  PredictMatch  PredictMatch[]
+}
+
+model Fixture {
+  id             String  @id @default(uuid())
+  number_fixture Int
+  Match          Match[]
+}
+
+model Match {
+  id            String       @id @default(uuid())
+  home_team     Team         @relation(fields: [id_home_team], references: [id], name: "home_team")
+  id_home_team  String
+  visit_team    Team         @relation(fields: [id_visit_team], references: [id], name: "visit_team")
+  id_visit_team String
+  result        validResult?
+
+  fixture           Fixture @relation(fields: [id_fixture_number], references: [id])
+  id_fixture_number String
+
+  PredictMatch PredictMatch[]
+}
+
+model PredictMatch {
+  id            String      @id @default(uuid())
+  result_predic validResult
+
+  match    Match  @relation(fields: [id_match], references: [id])
+  id_match String
+
+  user    User   @relation(fields: [id_user], references: [id])
+  id_user String
+}
+
+model Team {
+  id        String  @id @default(uuid())
+  name      String
+  url_image String
+  home_team_Matches Match[] @relation("home_team")
+  visit_team_Matches Match[] @relation("visit_team")
+}
+
