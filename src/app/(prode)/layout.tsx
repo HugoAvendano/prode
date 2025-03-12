@@ -1,4 +1,4 @@
-import { TopMenu, Sidebar } from "@/components/ui";
+import { TopMenu, Sidebar } from "@/components";
 
 export default function ProdeLayout({
  children

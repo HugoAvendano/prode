@@ -1,5 +1,7 @@
 'use client'
 
+
+import { logout } from "@/actions";
 //import { logout } from "@/actions"
 import { useUIStore } from "@/store"
 import clsx from "clsx";
@@ -18,10 +20,10 @@ export const Sidebar = () => {
   
   const isAdmin = isAuthenticated && session.user.role === 'admin'; */
 
-  /* const onLogout = async () => {
+  const onLogout = async () => {
     await logout();
     window.location.replace('/')
-  } */
+  }
 
   const isAuthenticated = true;
   const isAdmin = true;
@@ -87,7 +89,7 @@ export const Sidebar = () => {
             </Link>
 
             <Link
-              href="/orders"
+              href="/"
               className="menu-link"
               onClick={() => closeMenu()}
             >
@@ -96,7 +98,7 @@ export const Sidebar = () => {
             </Link>
 
             <Link
-              href="/orders"
+              href="/predicts"
               className="menu-link"
               onClick={() => closeMenu()}
             >
@@ -129,7 +131,7 @@ export const Sidebar = () => {
         {isAuthenticated && (
           <button
             className="menu-link w-full"
-            /* onClick={() => {onLogout(); closeMenu()}} */
+            onClick={() => {onLogout(); closeMenu()}}
           >
             <IoLogOutOutline size={25} className="icon"/>
             <span className="menu-item">Cerrar session</span>
@@ -143,7 +145,7 @@ export const Sidebar = () => {
             <div className="w-full h-px bg-gray-200 my-10" />           
 
             <Link
-              href="/admin/orders"
+              href="/admin/fixtures"
               className="menu-link"
               onClick={() => closeMenu()}
             >

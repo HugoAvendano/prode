@@ -1,15 +1,18 @@
 'use client'
 
-import { date_fixture } from '@/interfaces/fixture.interfaces';
+import { DateFixture, Match, validResult } from '@/interfaces/fixture.interfaces';
 import React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup";
 import clsx from 'clsx';
+import { IoSaveOutline } from 'react-icons/io5';
+import { saveUserFixture } from '@/actions';
+
 
 
 interface Props {
-  currentDate: date_fixture
+  currentFixture: Match[]
 }
 
 const schema = yup.object().shape({
@@ -24,14 +27,15 @@ const schema = yup.object().shape({
     .required(),
 });
 
-type FormInputs = {  
+
+type FormInputs = {
   matches: {
     selection: string;
     match_id: string
-  }[];  
+  }[];
 }
 
-export default function FixtureForm({ currentDate }: Props) {
+export default function FixtureForm({ currentFixture }: Props) {
 
   const {
     control,
@@ -39,19 +43,25 @@ export default function FixtureForm({ currentDate }: Props) {
     formState: { errors },
   } = useForm<FormInputs>({
     defaultValues: {
-      matches: currentDate.matches.map((match) => ({ selection: "", match_id: match.id  })),
+      matches: currentFixture.map((match) => ({ selection: "", match_id: match.id })),
     },
     resolver: yupResolver(schema),
   });
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     console.log(data);
-    const  { matches } = data;
-    /**
-     * TODO: Grabar en base de datos el
-     * const fixture = await saveFixture(matches,session!.user.id)
-     */
-  } 
+    const dataToSave = data.matches.map((match) =>({
+      match_id: match.match_id,
+      result: match.selection as validResult
+    }))
+   
+    const fixture = await saveUserFixture(dataToSave);
+
+    const {ok , predictsMatch} = fixture;
+
+    console.log(ok,predictsMatch);
+
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mb-10 mx-auto my-4 overflow-x-auto sm:w-full">
@@ -66,8 +76,8 @@ export default function FixtureForm({ currentDate }: Props) {
           </tr>
         </thead>
         <tbody>
-          {currentDate.matches.map((match, index) => (
-            <tr key={index} className={ clsx (
+          {currentFixture.map((match, index) => (
+            <tr key={index} className={clsx(
               "bg-white",
               {
                 'bg-red-500': errors.matches && errors.matches[index]
@@ -89,7 +99,7 @@ export default function FixtureForm({ currentDate }: Props) {
                   )}
                 />
               </td>
-              <td className="text-sm font-thin text-gray-900 text-center">{match.home_team}</td>
+              <td className="text-sm font-thin text-gray-900 text-center">{match.homeTeam.name}</td>
               <td className="text-sm font-thin text-gray-900 text-center">
                 <Controller
                   name={`matches.${index}.selection` as const}
@@ -106,7 +116,7 @@ export default function FixtureForm({ currentDate }: Props) {
                   )}
                 />
               </td>
-              <td className="text-sm font-thin text-gray-900 text-center">{match.visiting_team}</td>
+              <td className="text-sm font-thin text-gray-900 text-center">{match.visitTeam.name}</td>
               <td className="text-sm font-thin text-gray-900 text-center">
                 <Controller
                   name={`matches.${index}.selection` as const}
@@ -130,12 +140,16 @@ export default function FixtureForm({ currentDate }: Props) {
       {errors.matches && (
         <p className="text-red-500 text-sm mt-2">Debe seleccionar una opción para todos los partidos.</p>
       )}
-      <button
-        type="submit"
-        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-      >
-        Enviar
-      </button>
+      <div className="flex flex-col mb-2 pt-7">
+        <button
+          className='flex items-center justify-center  h-10 btn-primary'
+          title='Guardar Pronostico'
+          type='submit'
+        >
+          <IoSaveOutline size={30} />
+        </button>
+
+      </div>
     </form>
   );
 };
