@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import "./globals.css";
-import { titleFont, geistSans } from "@/config/font";
+import { titleFont, inter } from "@/config/font";
 
 
 
@@ -19,7 +19,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${titleFont.variable} antialiased`}
+        /* className={`${geistSans.variable} ${titleFont.variable} antialiased`} */
+        className={inter.className}
       >
         {children}
       </body>

@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 
 export const getMatchesByFixture = async (idFixture: string) => {
   try {
-    console.log('id-fixture: ',idFixture)
+    
     const fixtures = await prisma.match.findMany({
 
       where: { id_fixture_number: idFixture },

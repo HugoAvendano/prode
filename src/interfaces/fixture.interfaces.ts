@@ -4,7 +4,7 @@ export interface Match {
   id?: string;
   homeTeam: Team;
   visitTeam: Team;  
-  result?: validResult | null;
+  result: validResult;
 }
 
 export interface DateFixture {
@@ -25,4 +25,4 @@ export interface PredictMatch {
   result: validResult
 }
 
-export type validResult = 'L'| 'E' | 'V'
+export type validResult = 'L'| 'E' | 'V' | null; 
